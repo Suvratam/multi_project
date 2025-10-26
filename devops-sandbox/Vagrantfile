@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/ubuntu2204"
+  config.vm.hostname = "monitoring-sandbox"
+  config.vm.network "public_network", dev: "enp1s0"
+  # config.vm.network "private_network", ip: "192.168.121.10"  # Use libvirt's default network
+  config.vm.network "forwarded_port", guest: 3000, host: 3000   # Grafana
+  config.vm.network "forwarded_port", guest: 9090, host: 9090   # Prometheus
+  config.vm.network "forwarded_port", guest: 9093, host: 9093   # Alertmanager
+  
+  # Libvirt provider for KVM2 (via virt-manager/QEMU)
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.driver = "kvm"  # Explicitly use KVM for hardware acceleration
+    libvirt.host = "DevOps-Monitoring-Sandbox"
+    libvirt.memory = 2096
+    libvirt.cpus = 2
+    libvirt.autostart = true
+    # CPU topology for better KVM performance
+    libvirt.cputopology :sockets => '1', :cores => '2', :threads => '1'
+    # Disk settings
+    libvirt.storage :file, :size => '6G', :type => 'qcow2'
+    # Machine type for modern KVM/QEMU
+    # libvirt.machine_virtual_size = "4"  # e.g., pc-i440fx-4.2 or similar
+    libvirt.uri = 'qemu:///system'  # System-wide libvirt for KVM2
+    # Sync folders from host to guest
+  config.vm.synced_folder "./prometheus", "/prometheus"
+  config.vm.synced_folder "./grafana", "/grafana"
+  config.vm.synced_folder "./alertmanager", "/alertmanager"
+  end
+
+  config.vm.provision "shell", path: "provision.sh", privileged: true
+end
+

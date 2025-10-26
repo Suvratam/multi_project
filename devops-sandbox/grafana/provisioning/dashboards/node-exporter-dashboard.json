@@ -1,0 +1,14 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "node-exporter",
+    "title": "Node Exporter Full",
+    "tags": ["linux", "system"],
+    "timezone": "browser",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "30s"
+  },
+  "folderId": 0,
+  "overwrite": true
+}
