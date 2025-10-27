@@ -1,34 +1,15 @@
----
-- name: Restart nginx container if it's stopped
-  hosts: localhost
+- hosts: localhost
   connection: local
-  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/local/bin/python3.11
+    alertname: "NginxHttpDown"
+
   tasks:
-    - name: Check container 'web' status (using docker CLI)
-      command: docker inspect -f '{{.State.Running}}' web
-      register: inspect_result
-      ignore_errors: true
-
-    - name: Debug inspect_result
-      debug:
-        var: inspect_result.stdout
-
-    - name: If container not running, restart container
-      when: inspect_result.rc != 0 or inspect_result.stdout != 'true'
-      block:
-        - name: Try to start container (docker restart)
-          command: docker restart web
-          register: restart_result
-          ignore_errors: false
-
-        - name: Wait for 5 seconds for container to become healthy
-          pause:
-            seconds: 5
-
-        - name: Show docker ps -a for debugging
-          command: docker ps -a --filter "name=web"
-          register: ps_result
-
-        - debug:
-            var: ps_result.stdout
-
+    - name: Restart NGINX container
+      community.docker.docker_container:
+        name: self-healing-infrastructure-nginx-1
+        state: started
+        restart: yes
+      when: alertname == "NginxHttpDown"
+      environment:
+        DOCKER_HOST: unix:///var/run/docker.sock

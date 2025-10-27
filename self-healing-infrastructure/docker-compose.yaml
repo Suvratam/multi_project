@@ -1,25 +1,31 @@
 version: "3.8"
+
+networks:
+  monitoring:
+    driver: bridge
+
 services:
   nginx:
-    image: nginx:stable
-    container_name: web
+    build: ./hotstar-clone
     ports:
       - "8080:80"
     restart: unless-stopped
+    networks:
+      - monitoring
 
   blackbox:
     image: prom/blackbox-exporter:v0.27.0
-    container_name: blackbox
     ports:
       - "9115:9115"
     command:
       - --config.file=/etc/blackbox_exporter/config.yaml
     volumes:
       - ./blackbox/config.yaml:/etc/blackbox_exporter/config.yaml:ro
+    networks:
+      - monitoring
 
   prometheus:
     image: prom/prometheus:v3.7.2
-    container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
       - ./prometheus/alerts.yaml:/etc/prometheus/alerts.yaml:ro
@@ -29,10 +35,11 @@ services:
       - "9090:9090"
     depends_on:
       - blackbox
+    networks:
+      - monitoring
 
   alertmanager:
     image: prom/alertmanager:v0.28.1
-    container_name: alertmanager
     volumes:
       - ./alertmanager/alertmanager.yaml:/etc/alertmanager/alertmanager.yaml:ro
     command:
@@ -41,15 +48,18 @@ services:
       - "9093:9093"
     depends_on:
       - prometheus
+    networks:
+      - monitoring
 
   webhook:
     build: ./webhook
-    container_name: webhook
     ports:
       - "5001:5001"
     volumes:
       - ./playbooks:/playbooks:ro
-      - /var/run/docker.sock:/var/run/docker.sock   # allow ansible/docker to restart container
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - alertmanager
+    networks:
+      - monitoring
 

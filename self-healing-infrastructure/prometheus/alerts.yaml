@@ -1,12 +1,11 @@
 groups:
-  - name: service-health
-    rules:
-      - alert: ServiceDown
-        expr: probe_success == 0
-        for: 30s
-        labels:
-          severity: critical
-        annotations:
-          summary: "Service down (probe failed)"
-          description: "The blackbox probe for {{ $labels.instance }} failed."
-
+- name: example
+  rules:
+  - alert: NginxHttpDown
+    expr: probe_success{job="blackbox"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "NGINX HTTP endpoint down"
+      description: "NGINX HTTP endpoint is not responding for more than 1 minute."

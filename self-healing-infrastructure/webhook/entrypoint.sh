@@ -1,4 +1,4 @@
 #!/bin/bash
 # Start Flask app
-python /app/app.py
+exec /usr/local/bin/python3.11 /app/app.py
 
