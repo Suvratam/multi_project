@@ -47,3 +47,84 @@ Self-Healing Infrastructure
 └── README.md
 </pre>
 
+## Setup Instructions
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd self-healing-infrastructure
+   ```
+2. **Build and Start Services**:
+    ```bash
+    docker-compose build --no-cache
+    docker-compose up -d --build
+    ```
+    ![Self-Healing Infra](images/build.png)
+
+3. **Verify Setup:Check running containers**
+    ``` bash
+    docker ps -a
+    ```
+   >Should show self-healing-infrastructure-nginx-1, prometheus, alertmanager, blackbox, and webhook.
+
+***
+
+## Test webhook health 
+
+```bash
+curl http://localhost:5001/health
+```
+
+Test webhook: Open http://localhost:5001/health in a browser.
+
+  ![Self-Healing Infra](images/1.png)
+
+>Expected Output: ok
+
+## Test Alertmanager 
+
+Open http://localhost:9093 in a browser.
+
+  ![Self-Healing Infra](images/2.png)
+
+## Test nginx-server 
+### Open http://localhost:8080 in a browser.
+
+ ![Self-Healing Infra](images/3.png)
+
+## Verify Services
+
+### Prometheus: http://localhost:9090 (check targets: blackbox and nodedWebhook)
+ ![Self-Healing Infra](images/4.png)
+
+## TroubleshootingError 
+### killing the docker server of nginx then executing it through AlertManager:
+```bash
+docker kill <container-name>
+```
+ ![Self-Healing Infra](images/5.png)
+
+
+ ![Self-Healing Infra](images/6.png)
+
+ ![Self-Healing Infra](images/7.png)
+ 
+ ![Self-Healing Infra](images/8.png)
+ 
+ ![Self-Healing Infra](images/9.png)
+ 
+ ![Self-Healing Infra](images/10.png)
+
+ ![Self-Healing Infra](images/11.png)
+
+
+---
+<br></br> 
+> - **NOTE Rest of Content**: Unchanged from the previous version, including configurations, setup instructions, troubleshooting for the `http+docker` error, and optional CPU monitoring.
+
+
+
+
+
+
+
+
