@@ -7,4 +7,8 @@ This repository contains multiple DevOps projects.
 - [Self-Healing Infrastructure](./self-healing-infrastructure/README.md)
 - [DevOps Sandbox](./devops-sandbox/)
 
+## 📄 Projects-REPORT
+
+- [Project_Report.pdf](Project_Report.pdf)
+
 ---
