@@ -30,20 +30,20 @@ The self-healing infrastructure monitors an NGINX container using Prometheus and
 - **Linux Host**: Recommended for Docker socket access (`/var/run/docker.sock`).
 
 ## Project Structure
-
-Self-Healing Infrastructure
-├── alertmanager/
-│   └── alertmanager.yaml
-├── playbooks/
-│   └── restart\_nginx.yaml
-├── prometheus/
-│   ├── prometheus.yaml
-│   └── alerts.yaml
-├── webhook/
-│   ├── app.py
-│   ├── Dockerfile
-│   └── entrypoint.sh
-├── docker-compose.yaml
-└── README.md
-
+```
+    Self-Healing Infrastructure
+    ├── alertmanager/
+    │   └── alertmanager.yaml
+    ├── playbooks/
+    │   └── restart\_nginx.yaml
+    ├── prometheus/
+    │   ├── prometheus.yaml
+    │   └── alerts.yaml
+    ├── webhook/
+    │   ├── app.py
+    │   ├── Dockerfile
+    │   └── entrypoint.sh
+    ├── docker-compose.yaml
+    └── README.md
+```
 
